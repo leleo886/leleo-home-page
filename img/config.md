@@ -3,8 +3,8 @@ const config = {
   //网页元数据
   metaData:{
     title: 'Leleo的个人主页🎉',
-    description: '欢迎来到Leleo的奇妙世界！',
-    keywords: 'Leleo,leleo,个人主页,个人网站',
+    description: '欢迎来到小强的奇妙世界！',
+    keywords: '小强博客,个人主页,个人网站',
     icon: '/favicon.ico'   //网页图标，支持外链
   },
 
@@ -58,6 +58,19 @@ const config = {
     {icon:"mdi-wechat",link:"https://wx.qq.com/"},
     {icon:"mdi-youtube",link:"https://www.youtube.com"},
     {icon:"mdi-facebook",link:"https://www.facebook.com"}
+    {icon:"mdi-github",link:"https://github.com/xiaoqiangboke"},    
+    {icon:"mdi-youtube",link:"https://www.youtube.com/@%E9%82%93%E5%B0%8F%E5%BC%BA-r1u"},
+    {icon:"mdi-facebook",link:"https://www.facebook.com"}
+    {icon:"mdi-facebook",link:"https://www.x.com"}
+    {icon:"mdi-facebook",link:"https://www.instagram.com"}
+	  {icon:"mdi-facebook",link:"https://www.threads.net"}
+    {icon:"mdi-facebook",link:"https://www.tiktok.com"}
+    {icon:"mdi-facebook",link:"https://www.snapchat.com"}
+    {icon:"mdi-facebook",link:"https://www.douyin.com"}
+    {icon:"mdi-facebook",link:"https://weibo.com"}
+	  {icon:"mdi-facebook",link:"https://www.bilibili.com"}
+    {icon:"mdi-facebook",link:"https://qzone.qq.com"}
+
   ],
 
   //打字机
@@ -72,7 +85,7 @@ const config = {
   musicPlayer:{
     server: 'netease',  //服务提供商 --网易云音乐
     type: 'playlist',   //歌单类型
-    id: '2028178887'  //歌单id ---> music.163.com/#/playlist?id=2028178887
+    id: '2028178887'  //歌单id ---> [http://music.163.com/#/song?id=167888]
   },
 
   //壁纸数据 -----可以将壁纸文件上传到uhsea.com获取网络直链。若想调用api，请前往脚本自行修改逻辑
@@ -129,14 +142,7 @@ const config = {
 
   //项目卡片 其中 字段"show"控制初始卡片的text是否展开
   projectcards:[ 
-    {go:"🚀 前往",img:"/img/sunshine.jpg",title:"Project 1",subtitle:"1,000 miles of wonder", text:"If you see this line, I've managed to get your attention.",url:"https://leleo.top",show:false},
-    {go:"🗂️ 前往",img:"/img/sunshine.jpg",title:"Project 2",subtitle:"2,000 miles of wonder", text:"If you see this line, I've managed to get your attention.",url:"https://leleo.top",show:false},
-    {go:"📝 前往",img:"/img/sunshine.jpg",title:"Project 3",subtitle:"3,000 miles of wonder", text:"If you see this line, I've managed to get your attention.",url:"https://leleo.top",show:false},
-    {go:"👍 前往",img:"/img/sunshine.jpg",title:"Project 4",subtitle:"4,000 miles of wonder", text:"If you see this line, I've managed to get your attention.",url:"https://leleo.top",show:false},
-    {go:"🗃 前往",img:"/img/sunshine.jpg",title:"Project 5",subtitle:"5,000 miles of wonder", text:"If you see this line, I've managed to get your attention.",url:"https://leleo.top",show:false},
-    {go:"🎨 前往",img:"/img/sunshine.jpg",title:"Project 6",subtitle:"6,000 miles of wonder", text:"If you see this line, I've managed to get your attention.",url:"https://leleo.top",show:false},
-    {go:"💍 前往",img:"/img/sunshine.jpg",title:"Project 7",subtitle:"7,000 miles of wonder", text:"If you see this line, I've managed to get your attention.",url:"https://leleo.top",show:false},
-    {go:"🔍 前往",img:"/img/sunshine.jpg",title:"Project 8",subtitle:"8,000 miles of wonder", text:"If you see this line, I've managed to get your attention.",url:"https://leleo.top",show:false},
+
   ],
   
   statement: ["备案号：XXICP备123456789号","Copyright © 2025 Leleo"],
