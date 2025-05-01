@@ -2,14 +2,14 @@
 const config = {
   //网页元数据
   metaData:{
-    title: 'Leleo的个人主页🎉',
-    description: '欢迎来到Leleo的奇妙世界！',
-    keywords: 'Leleo,leleo,个人主页,个人网站',
+    title: 'hjx的个人主页🎉',
+    description: '欢迎来到hjx的奇妙世界！',
+    keywords: 'hjx,hjx,个人主页,个人网站',
     icon: '/favicon.ico'   //网页图标，支持外链
   },
 
   avatar: "/img/avatar.jpg", // 头像
-  welcometitle: "Hi, I'm Leleo", // 标题
+  welcometitle: "Hi, I'm hjx", // 标题
 
   // 颜色配置
   color: {
