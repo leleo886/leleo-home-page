@@ -1,11 +1,14 @@
+<!-- 右栏组件：包含欢迎语、搜索框、打字机、时钟、项目卡片 -->
 <template>
       <div>
         <div>
+          <!-- PC 端显示欢迎语（xs / sm 已在 App.vue 中显示） -->
           <div :style="xs||sm?{'display':'none'}:{'font-size':'4rem'}" class="leleo-left-welcome">{{ configdata.welcometitle }}</div>
         </div>
         <div>
           <v-row align="center">
             <v-col cols="12" md="8">
+				<!-- 搜索框：支持多引擎与网址直达 -->
 				<v-text-field class="v-card"
 					:style="xs||sm?{'display':'none'}:{}"
 					v-model="searchQuery"
@@ -48,8 +51,10 @@
 						></v-btn>
 					</template>
 					</v-text-field>
+            	<!-- 打字机文字效果 -->
             	<typewriter class="ma-3 d-flex align-center justify-center" style="min-height: 200px;"></typewriter>
             </v-col>
+            <!-- 时钟 + 转盘装饰 -->
             <v-col cols="12" md="4" align="center">
               <v-card class="ma-3" hover
                 >
@@ -64,6 +69,7 @@
             </v-col>
           </v-row>
           
+          <!-- 项目卡片区域 -->
           <v-chip class="mt-3 ml-3" prepend-icon="mdi-webhook"  size="large" style="color: var(--leleo-vcard-color);">
             部署项目
           </v-chip>
@@ -125,14 +131,14 @@ import { useDisplay } from 'vuetify'
 
 export default {
     components: {
-        typewriter,turntable
+        typewriter, turntable
     },
-    props: ['configdata','formattedTime','formattedDate','projectcards'],
+    props: ['configdata', 'formattedTime', 'formattedDate', 'projectcards'],
 	data() {
 		return {
-			searchQuery: '',
-			selectedEngine: { title: 'Bing', value: 'bing' },
-      		searchEngines :[
+			searchQuery: '',                              // 搜索框输入内容
+			selectedEngine: { title: 'Bing', value: 'bing' }, // 当前选中的搜索引擎
+      		searchEngines: [
 				{ title: 'Bing', value: 'bing' },
 				{ title: 'Google', value: 'google' },
 				{ title: '百度', value: 'baidu' },
@@ -142,23 +148,26 @@ export default {
 		}
 	},
     setup() {
-      const { xs,sm,md } = useDisplay();
-      return {xs,sm,md};
+      const { xs, sm, md } = useDisplay();
+      return { xs, sm, md };
     },
 	computed: {	
-		isUrl(){
+		// 判断输入是否为网址（含域名、IP、localhost）
+		isUrl() {
 			const str = this.searchQuery.trim();
   			return this.isLikelyUrl(str);
 		}
 	},
-    methods:{
-      projectcardsShow(key){
-        for(let i = 0;i < this.projectcards.length;i++){
-          if(i != key){
+    methods: {
+      // 展开指定项目卡片，其余卡片收起
+      projectcardsShow(key) {
+        for (let i = 0; i < this.projectcards.length; i++) {
+          if (i != key) {
             this.projectcards[i].show = false;
           }
         }
       },
+	  // 执行搜索或打开网址
 	  performSearch() {
 		const query = this.searchQuery.trim();
 		if (!query) return;
@@ -167,7 +176,7 @@ export default {
 			let url = query;
 			// 自动补全协议（如果缺少）
 			if (!/^[a-z]+:\/\//i.test(url)) {
-				url = 'http://' + url; // 默认用http
+				url = 'http://' + url; // 默认用 http
 			}
 			
 			window.open(url, '_blank');
@@ -182,19 +191,18 @@ export default {
 			window.open(engineUrls[this.selectedEngine.value], '_blank');
 		}
 	  },
+	  // 判断输入是否像一个 URL（域名 / IP / localhost）
 	  isLikelyUrl(input) {
-		// 移除首尾空格
 		const str = input.trim();
 		
-		// 情况1：明确包含协议头（http/https/ftp等）
+		// 情况 1：明确包含协议头（http/https/ftp 等）
 		if (/^(https?|ftp):\/\//i.test(str)) return true;
 		
-		// 情况2：符合域名格式（支持国际化域名）
+		// 情况 2：符合域名格式（支持国际化域名）
 		const domainPattern = /^([a-z0-9-]+\.)+[a-z]{2,}(\/.*)?$/i;
 		
-		// 情况3：localhost或IP地址
+		// 情况 3：localhost 或 IP 地址
 		const localPattern = /^(localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(\/.*)?$/i;
-		
 		
 		return (
 			domainPattern.test(str) || 

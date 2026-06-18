@@ -1,14 +1,21 @@
+/* ============ 应用主样式 app.less ============
+   全局 Vuetify 覆写、全屏背景、左栏布局、头像旋转等动画
+*/
+
+/* Vuetify VCard 毛玻璃效果 + 圆角 */
 .v-card{
     backdrop-filter: blur(var(--leleo-blur));
     border-radius: 5%;
     color: var(--leleo-vcard-color);
 }
 
+/* 页面全屏应用容器：固定定位，作为所有内容与背景的根 */
 .vapp-fullscreen-background {
     position: fixed;
     background-color: #282c34;
     z-index: -1;
     
+    /* 清除屏幕模式下的浮动开关 */
     .floating-switch-container {
         position: fixed;
         right: 0;
@@ -23,7 +30,7 @@
     .floating-switch:hover {
         transform: translateX(0); /* 悬停时完全展开 */
     }
-    /* 调整视频元素的样式，使其全屏作为背景 */
+    /* 视频背景样式：覆盖全屏并保持宽高比 */
     .video-bg {
         position: fixed;
         z-index: -100;
@@ -36,6 +43,7 @@
         background-clip: padding-box;
         filter: brightness(var(--leleo-brightness));
     }
+    /* 页面加载遮罩 */
     .loading{
         position: fixed;
         top: 0;
@@ -48,6 +56,7 @@
         justify-content: center; 
         align-items: center; 
     }
+    /* 加载与清除屏切换时的淡入淡出过渡 */
     .fade-enter-active, .fade-leave-active { 
         transition: opacity .8s
       }
@@ -55,12 +64,14 @@
         opacity: 0  
     }
 
+    /* ============ 左侧区域 ============ */
     .leleo-left{
         height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
+        /* 欢迎语 */
         &-welcome{
             margin-top: 10px;
             width: 100%;
@@ -68,6 +79,7 @@
             padding: 0 2rem;
             font-family: "myfont";
         }
+        /* 头像区域（含迷你播放器 & 旋转动画） */
         &-avatar{
             .musicplayer{
                 position: absolute;
@@ -111,19 +123,21 @@
                 }
             }
         }
+        /* 社交按钮悬停放大 */
         &-socialIconsContainer{
             .leleo-social-bticon:hover{
                 transform: scale(1.2);
             }
         }
     }
+    /* 时钟字体：使用自定义数字字体 */
     .clock-font{
         font-family: "digitalfont";
         font-weight: 800;
     }
 }
   
-/* 添加一个::before伪元素降低背景图片的亮度，而不会影响background元素的其他内容 */
+/* 背景图片通过 ::before 伪元素渲染：避免影响 v-app 本身的层级与交互 */
 .vapp-fullscreen-background::before {
     content: "";
     background-image: var(--leleo-background-image-url); 
@@ -134,9 +148,9 @@
     width: 100%;
     height: 100%;
     z-index: -1;
-    /* 调整亮度值  */
     filter: brightness(var(--leleo-brightness));
 }
+/* PC 端下背景带圆角 */
 .vapp-fullscreen-background.radius-before::before{
     border-radius: 16px;
 }

@@ -1,3 +1,4 @@
+<!-- 设置面板 - 背景壁纸页签：支持 PC/移动端的静态/动态壁纸选择与分页浏览 -->
 <template>
     <v-container fluid class="pa-0 tab2">
       <v-tabs
@@ -18,6 +19,7 @@
           
           <template v-slot:item="{ item }">
             <v-tabs-window-item :value="item.value" class="pa-4">
+                <!-- 图片壁纸 tab -->
                 <div v-if="item.value === 'tab-1'">
                     <v-radio-group v-model="radios" inline>
                         <template v-slot:label>
@@ -69,6 +71,7 @@
                             </v-col>
                         </v-row>
                     </v-radio-group>
+                    <!-- 图片分页 -->
                     <v-pagination
                     v-model="currentPICPage"
                     :length="totalPICPages"
@@ -76,6 +79,7 @@
                     :density="smAndDown? 'compact':'default'"
                     ></v-pagination>
                 </div>
+                <!-- 动态壁纸 tab -->
                 <div v-if="item.value === 'tab-2'">
                     <v-radio-group v-model="radios" inline>
                         <template v-slot:label>
@@ -108,6 +112,7 @@
                                     <div v-if="!item.loaded" class="loading-spinner">
                                         <v-progress-circular indeterminate></v-progress-circular>
                                     </div>
+                                    <!-- 视频预览（自动静音循环播放） -->
                                     <video autoplay loop muted 
                                         @click="item=radios"
                                         :class="{'selected-item':radios === item }"
@@ -122,6 +127,7 @@
                         </v-row>
                     </v-radio-group>
 
+                    <!-- 动态壁纸分页 -->
                     <v-pagination
                     v-model="currentVDPage"
                     :length="totalVDPages"
@@ -134,12 +140,35 @@
         </v-tabs>
          <div style="text-align: center;font-size: 12px;"><span>不同壁纸在相应设备下响应</span></div>
     </v-container>
-    <div class="d-flex justify-center mt-3">
-        <v-btn :loading="loading1" variant="tonal" class="ma-2" @click="redefault()">恢复</v-btn>
-        <v-btn :loading="loading3" variant="tonal" class="ma-2" @click="cancel()">取消</v-btn>
-        <v-btn :loading="loading2" variant="tonal" class="ma-2" @click="submitdata()">确认</v-btn>
+    <!-- 底部操作按钮 -->
+    <div class="d-flex justify-center mt-3 flex-wrap" style="gap:6px;">
+        <v-btn :loading="loading1" variant="tonal" @click="redefault()">恢复</v-btn>
+        <v-btn :loading="loading3" variant="tonal" @click="cancel()">取消</v-btn>
+        <v-btn :loading="loading2" variant="tonal" @click="submitdata()">确认</v-btn>
+        <v-btn v-if="isAdmin" color="var(--leleo-vcard-color)" variant="tonal" @click="publishToGlobal()">🔒 发布为全局</v-btn>
     </div>
 
+    <!-- 发布全局配置弹窗（仅管理员可见） -->
+    <v-dialog v-model="publishDialog" max-width="700">
+      <v-card>
+        <v-card-title>发布壁纸为全局默认</v-card-title>
+        <v-card-text>
+          点击下方「复制代码」按钮，把这段 JSON 粘贴到 <code>src/config.js</code> 的 <code>background</code> 字段里即可让所有访客看到此壁纸。
+        </v-card-text>
+        <div class="px-6 pb-4">
+          <v-textarea v-model="publishCode" rows="10" readonly outlined></v-textarea>
+        </div>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="publishDialog = false">关闭</v-btn>
+          <v-btn variant="tonal" color="var(--leleo-vcard-color)" @click="copyPublishCode" :loading="copying">
+            复制代码
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- 请选择壁纸的提示条 -->
     <v-snackbar
       :timeout="2000"
       color="info"
@@ -163,19 +192,19 @@ export default {
     },
     data () {
         return {
-            loading1: false,
-            loading2: false,
-            loading3: false,
-            snackbar:false,
-            configdata:config,
-            background: {'pc':{},'mobile':{}},
-            wallpaperPIC: null,
-            wallpaperVD: null,
-            radios: {},
-            currentVDPage: 1,
-            currentPICPage: 1,
-            itemsPerPage: 6, // 每页显示的item数量
-            tab: null,
+            loading1: false,    // 恢复按钮 loading
+            loading2: false,    // 确认按钮 loading
+            loading3: false,    // 取消按钮 loading
+            snackbar: false,    // 提示条
+            configdata: config,
+            background: {'pc':{},'mobile':{}}, // 保存到 cookie 的背景结构
+            wallpaperPIC: null, // 当前展示的图片壁纸列表
+            wallpaperVD: null,  // 当前展示的视频壁纸列表
+            radios: {},         // 当前选中的壁纸
+            currentVDPage: 1,   // 视频当前页
+            currentPICPage: 1,  // 图片当前页
+            itemsPerPage: 6,    // 每页显示的 item 数量
+            tab: null,          // tab 内部标签页
             tabs: [
                 {
                     icon: 'mdi-panorama-variant-outline',
@@ -192,10 +221,11 @@ export default {
                 { type: 'pc',name: '电脑壁纸' },
                 { type: 'mobile',name: '手机壁纸' },
             ],
-            type:'pc'
+            type:'pc' // 当前设备类型（影响展示 PC 壁纸还是移动端壁纸）
         }
     },
     mounted() {
+        // 支持 VITE_CONFIG 环境变量覆盖配置
         if(import.meta.env.VITE_CONFIG){
             this.configdata = JSON.parse(import.meta.env.VITE_CONFIG);
         }
@@ -204,6 +234,7 @@ export default {
         this.radios.title = "请选择壁纸";
     },
     watch: {
+        // 切换 tab 时，重置分页
         tab(val) {
             this.type = 'pc';
             this.itemsPerPage = 6;
@@ -215,19 +246,21 @@ export default {
         }
     },
     computed: {
-        // 计算总页数
+        // 计算视频总页数
         totalVDPages() {
             return Math.ceil(this.wallpaperVD.length / this.itemsPerPage);
         },
+        // 计算图片总页数
         totalPICPages() {
             return Math.ceil(this.wallpaperPIC.length / this.itemsPerPage);
         },
-        // 计算当前页显示的item
+        // 计算当前页要显示的图片项
         paginatedPICItems(){
             const start = (this.currentPICPage - 1) * this.itemsPerPage;
             const end = start + this.itemsPerPage;
             return this.wallpaperPIC.slice(start, end);
         },
+        // 计算当前页要显示的视频项
         paginatedVDItems() {
             const start = (this.currentVDPage - 1) * this.itemsPerPage;
             const end = start + this.itemsPerPage;
@@ -238,6 +271,7 @@ export default {
         setCookie,
         getCookie,
         eraseCookie,
+        // 确认保存壁纸选择
         submitdata() {
             if(!this.radios.url){
                 this.snackbar = true;
@@ -246,6 +280,7 @@ export default {
             let leleodatabackground = this.getCookie("leleodatabackground");
             delete this.radios.loaded;
             if(this.type == 'mobile'){
+                // 保存移动端壁纸，PC 端保留
                 this.background.mobile.type= this.tab === 'tab-1'? 'pic' : 'video';
                 this.background.mobile.datainfo = this.radios;
                 if(leleodatabackground){
@@ -254,6 +289,7 @@ export default {
                     this.background.pc = this.configdata.background.pc;
                 }
             }else{
+                // 保存 PC 端壁纸，移动端保留
                 this.background.pc.type= this.tab === 'tab-1'? 'pic' : 'video';
                 this.background.pc.datainfo = this.radios;
                 if(leleodatabackground){
@@ -270,6 +306,7 @@ export default {
                 location.reload();
             }, 800)   
         },
+        // 恢复默认壁纸
         redefault(){              
             this.loading1 = true
             setTimeout(() => {
@@ -278,16 +315,19 @@ export default {
                 location.reload();
             }, 800) 
         },
+        // 取消（触发父组件事件）
         cancel() {
             this.$emit('cancel');
         },
-        // 更新当前页
+        // 更新视频分页
         updateVDPage(page) {
             this.currentVDPage = page;
         },
+        // 更新图片分页
         updatePICPage(page) {
             this.currentPICPage = page;
         },
+        // 在 PC/移动端壁纸之间切换
         switchType(type,tabtype){
             if(tabtype == 'static'){
                 if(type == 'mobile'){

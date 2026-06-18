@@ -1,14 +1,29 @@
+/* ============ 全局样式 style.css ============
+   - 自定义字体注册
+   - CSS 变量声明（由 JS 运行时注入）
+   - 滚动条、body、Vuetify 组件微调
+*/
+
+/* 自定义字体："myfont" 用作欢迎语字体 */
 @font-face {
     font-family: "myfont";
     src: url("../fonts/faken.ttf");
     font-display: swap;
 }
+/* 自定义字体："digitalfont" 用作时钟字体 */
 @font-face {
     font-family: "digitalfont";
     src: url("../fonts/Digital-Play-Italic-St-1.ttf");
     font-display: swap;
 }
 
+/* CSS 变量（由 JS 在运行时设置）：
+     --leleo-background-image-url  背景图 URL（或视频模式时为空）
+     --leleo-welcomtitle-color     欢迎语颜色
+     --leleo-vcard-color           卡片/文字主色
+     --leleo-brightness            背景亮度滤镜百分比
+     --leleo-blur                  卡片毛玻璃模糊半径
+*/
 :root {
     /*
     --leleo-background-image-url
@@ -20,25 +35,29 @@
     */
 }
 
-/* 设置滚动条样式 */
+/* 全局滚动条：把外层滚动条宽度置 0，仅保留局部滚动条 */
 ::-webkit-scrollbar {
     width: 0px;
 }
 
+/* 滚动条滑块（内部局部滚动条会用这个） */
 ::-webkit-scrollbar-thumb {
     background-color: var(--main_text_color, #000000);
     border-radius: 8px;
     height: 20%;
 }
 
+/* 滚动条轨道 */
 ::-webkit-scrollbar-track {
     background-color: var(--main_bg_color, linear-gradient(50deg, #a2d0ff, #ffffff));
 }
 
+/* 页面背景底色（视频壁纸 / 图片未加载时显示） */
 body {
 	background-color: #282c34;
 }
 
+/* Vuetify 细节微调 */
 .v-selection-control-group{
     justify-content: center;
 }

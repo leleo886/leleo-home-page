@@ -1,9 +1,10 @@
+<!-- 加载遮罩组件：使用 Uiverse 提供的纯 CSS 3D 旋转动画 -->
 <template>
 <div class="spinner"></div>
 </template> 
 
 <style scoped>
-/* From Uiverse.io by Nawsome */ 
+/* 来源：Uiverse.io by Nawsome */ 
 .spinner:before {
   transform: rotateX(60deg) rotateY(45deg) rotateZ(45deg);
   animation: 750ms rotateBefore infinite linear reverse;

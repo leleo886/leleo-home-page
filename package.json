@@ -1,27 +1,49 @@
 {
+  // 项目名称
   "name": "vite-vuetify",
+  // 是否私有项目（不会被发布到 npm）
   "private": true,
+  // 项目版本号
   "version": "0.0.0",
+  // 模块类型为 ESM
   "type": "module",
+  // 定义各种脚本命令
   "scripts": {
+    // 本地开发（监听外网地址）
     "dev": "vite --host",
+    // 生产构建
     "build": "vite build",
+    // 预览生产构建产物
     "preview": "vite preview",
+    // Vitepress 文档开发服务
     "docs:dev": "vitepress dev docs",
+    // Vitepress 文档构建
     "docs:build": "vitepress build docs",
+    // Vitepress 文档预览
     "docs:preview": "vitepress preview docs"
   },
+  // 运行时依赖
   "dependencies": {
+    // 前端图标库
     "@mdi/font": "^7.4.47",
+    // 图表库
     "chart.js": "^4.4.7",
+    // CSS 预处理器
     "less": "^4.2.0",
+    // 打字机效果库
     "typeit": "^8.8.7",
+    // Vue 3 核心库
     "vue": "^3.5.12",
+    // Vue 图表封装
     "vue-chartjs": "^5.3.2",
+    // Vuetify UI 组件库
     "vuetify": "^3.7.4"
   },
+  // 开发时依赖
   "devDependencies": {
+    // Vue 单文件组件编译插件
     "@vitejs/plugin-vue": "^5.1.4",
+    // Vite 构建工具
     "vite": "^5.4.10"
   }
 }

@@ -1,10 +1,16 @@
+/* ============ 移动端适配 mobile.less ============
+   仅在 960px 以下的小屏生效
+*/
+
 @media (max-width: 960px){
     .leleo-left{
+        /* 迷你播放器的文字在手机上再小一点 */
         &-avatar{
             .musicplayer-text{
                 font-size: 10px!important;
             }
         }
+        /* 右下角的设置按钮：缩小并固定在屏幕右下角 */
         &-socialIconsContainer{
             .setting{
                 transform: scale(0.8);

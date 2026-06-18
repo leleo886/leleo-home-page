@@ -1,3 +1,4 @@
+<!-- 设置面板 - 音乐播放页签：播放列表、进度条、歌词滚动 -->
 <template>
     <div v-if="!lyricsloaded || audioLoading" class="loading-spinner">
             <v-progress-circular indeterminate></v-progress-circular>
@@ -19,6 +20,7 @@
             <v-btn icon @click="nextTrack" :size="xs?28:38" variant= 'tonal' class="ml-1">
               <v-icon>mdi-skip-next</v-icon>
             </v-btn>
+            <!-- 进度条 -->
             <v-slider style="margin-bottom: -22px;padding: 0;"
                   v-model="currentTime"
                   :max="duration"
@@ -30,7 +32,8 @@
                   @strat="onSliderStart"
               ></v-slider>
             
-
+            
+            <!-- 时间显示 -->
             <span 
             :style="xs?{'font-size':'10px'}:{'font-size':'12px'}" 
             style="color:var(--leleo-vcard-color);"
@@ -109,15 +112,16 @@ export default {
 
   data() {
     return {
-      lyricsloaded: true,
-      lyrics: [], // 存储解析后的歌词
-      currentLyric: "", // 当前显示的歌词
-      lyricInterval: null, // 歌词更新定时器
-      currentTime:null,
-      duration:null,
+      lyricsloaded: true,   // 歌词是否加载完成
+      lyrics: [],           // 存储解析后的歌词
+      currentLyric: "",     // 当前显示的歌词
+      lyricInterval: null,  // 歌词更新定时器
+      currentTime: null,    // 当前播放时间（秒）
+      duration: null,       // 歌曲总时长（秒）
     };
   },
   computed: {
+    // 当前播放的歌曲对象
     currentSong() {
       return this.musicinfo[this.currentIndex];
     }
@@ -138,7 +142,7 @@ export default {
     }
   },
   methods: {
-    // 加载歌词
+    // 加载歌词（通过歌词文件 URL）
     async loadLyrics() {
       if (!this.currentSong.lrc) return;
       this.lyricsloaded = false;
@@ -154,7 +158,7 @@ export default {
         console.error("Failed to load lyrics:", error);
       }
     },
-    // 解析歌词
+    // 解析 LRC 格式歌词，转为 [{time, text}]
     parseLyrics(text) {
       const lines = text.split("\n");
       return lines
@@ -172,7 +176,7 @@ export default {
         })
         .filter(line => line !== null);
     },
-    // 更新当前歌词
+    // 根据当前播放时间更新歌词显示
     updateLyric() {
       const currentTime = this.audioPlayer.currentTime;
       for (let i = this.lyrics.length - 1; i >= 0; i--) {
@@ -195,7 +199,7 @@ export default {
         this.lyricInterval = null;
       }
     },
-    // 播放指定索引的歌曲
+    // 点击播放列表中的某首歌
     play(index) {
       if (index === this.currentIndex && this.isPlaying) {
         this.togglePlay();
@@ -204,7 +208,7 @@ export default {
         this.$emit("update:is-playing", true);
       }
     },
-    // 切换播放/暂停状态
+    // 切换播放 / 暂停
     togglePlay() {
       if (this.isPlaying) {
         this.audioPlayer.pause();
@@ -219,31 +223,36 @@ export default {
       this.$emit("update:current-index", nextIndex);
       this.$emit("update:is-playing", true);
     },
-    // 滚动到当前播放的歌曲
+    // 滚动列表到当前歌曲
     scrollToCurrentSong() {
       const currentSongItem = this.$refs.songItems[this.currentIndex];
       if (currentSongItem) {
         currentSongItem.$el.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     },
+    // 实时同步播放时间
     updateTime() {
       this.currentTime = this.audioPlayer.currentTime;
     },
+    // 同步总时长
     updateDuration() {
       this.duration = this.audioPlayer.duration;
     },
+    // 拖动进度条
     seek(time) {
       this.audioPlayer.currentTime = time;
     },
+    // 进度条拖动开始时暂停
     onSliderStart(){
         this.audioPlayer.pause();
         this.$emit("update:is-playing", false);
     },
+    // 进度条拖动结束后继续播放
     onSliderEnd(){
         this.audioPlayer.play();
         this.$emit("update:is-playing", true);
     },
-    // 格式化时间（将秒转换为 mm:ss 格式）
+    // 将秒数格式化为 mm:ss 字符串
     formatTime(time) {
       const minutes = Math.floor(time / 60);
       const seconds = Math.floor(time % 60);
@@ -252,6 +261,7 @@ export default {
   },
   
   mounted() {
+    // 如果主件已传有缓存歌词，直接使用
     if(this.fromLyrics.index>=0 && this.currentIndex == this.fromLyrics.index){
         this.lyrics = this.fromLyrics.lyrics;
         this.startLyricUpdate();
@@ -262,6 +272,7 @@ export default {
         }
         this.loadLyrics(); // 若之前无数据则初始化加载歌词
     }
+    // 绑定进度条 / 时长监听
     this.audioPlayer.addEventListener('timeupdate', this.updateTime);
     this.audioPlayer.addEventListener('loadedmetadata', this.updateDuration);
     this.duration = this.audioPlayer.duration;
