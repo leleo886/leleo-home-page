@@ -130,7 +130,7 @@ npm run dev
 > (1). 首先还是打开vercel中本项目主面板，然后依次点击`Settings`、`Environments`、`Production`
 ![Vercel控制面板](./img/leleo-home-page/1737624788108.png)
 
-> (2). 然后下翻点击`Add Environment Variable`按钮，要求填入`Key`值为`VITE_CONFIG`,`Value`值如[环境变量值](./img/env.md)所示，全部复制粘贴即可（有点多），根据个人情况自定义修改，配置说明同方法1。
+> (2). 然后下翻点击`Add Environment Variable`按钮，要求填入`Key`值为`VITE_CONFIG`,`Value`值如[环境变量值](./img/env.md)所示，全部复制粘贴即可（有点多），根据个人情况自定义修改，配置说明同方法1。注意！！！如果运行后页面无图显示且开发者工具报错：”SyntaxError: Expected ',' or '}' after property value in JSON at position···“，可能是环境变量的json格式化问题。这里推荐将项目拉取到本地然后使用[Vercel CLI](https://vercel.com/docs/cli/deploy)方法进行上传。
 ![Vercel控制面板](./img/leleo-home-page/1737625015472.png)
 
 > (3). 回到项目主面板，依次点击`Project`、`Build Logs`，进入新页面后再找到`Redeploy`。最后等待重新部署完成即可。
